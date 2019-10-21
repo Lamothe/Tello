@@ -6,6 +6,6 @@ namespace Tello
 {
     public static class Constants
     {
-        public const string WiFiSsid = "TELLO-D8BEBF";
+        public const string WiFiSsid = "TELLO-";
     }
 }

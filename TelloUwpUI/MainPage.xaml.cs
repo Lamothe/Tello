@@ -143,7 +143,7 @@ namespace TelloUwpUI
 
         private async Task Loop()
         {
-            await logger.WriteInformationLine($"Waiting for connection to {Tello.Constants.WiFiSsid}");
+            await logger.WriteInformationLine($"Waiting for WiFi connection");
 
             running = true;
             while (running)
@@ -152,7 +152,7 @@ namespace TelloUwpUI
                 {
                     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                         () => OutputScroller.ChangeView(0, double.MaxValue, 1));
-                    await RefreshNetworkConnection(Tello.Constants.WiFiSsid);
+                    await RefreshNetworkConnection();
                     UpdateState();
                 }
                 catch (Exception ex)
@@ -190,16 +190,16 @@ namespace TelloUwpUI
             return availableNetworks;
         }
 
-        private async Task RefreshNetworkConnection(string ssid)
+        private async Task RefreshNetworkConnection()
         {
             var availableNetworks = await Scan();
 
-            var availableNetwork = availableNetworks.FirstOrDefault(x => x.Ssid == ssid);
+            var availableNetwork = availableNetworks.FirstOrDefault(x => x.Ssid.StartsWith(Constants.WiFiSsid));
             if (availableNetwork == null)
             {
                 if (connected)
                 {
-                    await OnDisconnect(ssid);
+                    await OnDisconnect();
                 }
             }
             else
@@ -226,11 +226,11 @@ namespace TelloUwpUI
             }
         }
 
-        private async Task OnDisconnect(string ssid)
+        private async Task OnDisconnect()
         {
             if (connected)
             {
-                await logger.WriteErrorLine($"Disconnected from {ssid}");
+                await logger.WriteErrorLine($"Disconnected from Tello");
                 await commandClient.DisableVideo();
                 await videoServer.StopListening();
                 await stateClient.StopListening();
