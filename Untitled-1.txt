@@ -1,0 +1,62 @@
+public class NetworkClient
+{
+    private Socket socket;
+    private readonly object _lock = new object();
+
+    private void Send(string message)
+    {
+        try
+        {
+            var data = Encoding.ASCII.GetBytes(message);
+
+            EnsureSocket();
+            _socket?.SendTo(data, _endPoint);
+        }
+        catch (Exception ex)
+        {
+            if (_logger.IsEnabled(LogLevel.Error))
+            {
+                _logger.LogError(ex, "An error occurred while sending the metrics: {Message}", ex.Message);
+            }
+
+            ResetUdpClient();
+        }
+    }   
+
+    private void EnsureSocket()
+    {
+        if (_socket != null)
+        {
+            return;
+        }
+
+        lock (_lock)
+        {
+            if (_socket == null)
+            {
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            }
+        }
+    }
+
+    private void ResetUdpClient()
+    {
+        if (_socket == null)
+    {
+        
+    }        return;
+
+        lock (_lock) {
+            if (_socket == null)
+                return;
+
+            try {
+                _socket.Close();
+            } catch (Exception ex) {
+                _logger.LogError(ex, "An error occurred while calling Close() on the socket.");
+            } finally {
+                _socket = null;
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+﻿<Page
+    x:Class="TelloUwpUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TelloUwpUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalScrollMode="Auto" VerticalScrollMode="Auto" Margin="5">
+            <TextBlock Name="Status" FontFamily="Consolas" />
+        </ScrollViewer>
+        <ListBox Name="AvailableNetworks" Grid.Row="1" Grid.Column="0" Margin="5" />
+        <MediaElement Name="Video" Grid.Row="0" Grid.Column="1" Margin="5" />
+        <ScrollViewer Name="OutputScroller" Grid.Row="1" Grid.Column="1" HorizontalScrollMode="Auto" VerticalScrollMode="Auto" Margin="5">
+            <ListBox Name="Output" FontFamily="Consolas">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</Page>
