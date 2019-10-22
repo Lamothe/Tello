@@ -6,7 +6,7 @@ namespace Tello
     {
         private bool connected { get; set; } = false;
 
-        public CommandClient(ILogger logger)
+        public CommandClient(Logger logger)
             : base(logger, "192.168.10.1", 8889)
         {
         }

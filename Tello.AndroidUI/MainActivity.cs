@@ -10,7 +10,7 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TelloUI
+namespace Tello.AndroidUI
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
@@ -29,7 +29,7 @@ namespace TelloUI
             logger.SetOutputWindow(outputWindow);
 
             var serviceProvider = new ServiceCollection()
-                .AddSingleton<Tello.ILogger>(logger)
+                .AddSingleton<Tello.Logger>(logger)
                 .BuildServiceProvider();
 
             var commandClient = new Tello.CommandClient(logger);
@@ -41,14 +41,14 @@ namespace TelloUI
                 var wifiManager = (WifiManager)Application.Context.GetSystemService(WifiService);
                 if (!wifiManager.IsWifiEnabled)
                 {
-                    await logger.WriteInformationLine("Enabling WiFi");
-                    await logger.WriteInformationLine(wifiManager.SetWifiEnabled(true) ? "Enabled" : "Failed");
+                    logger.WriteInformationLine("Enabling WiFi");
+                    logger.WriteInformationLine(wifiManager.SetWifiEnabled(true) ? "Enabled" : "Failed");
                 }
 
                 var initialiseSuccess = await commandClient.Initialise();
                 if (!initialiseSuccess)
                 {
-                    await logger.WriteErrorLine("Failed to initialise connection");
+                    logger.WriteErrorLine("Failed to initialise connection");
                 }
                 else if (!stateClient.IsListening)
                 {

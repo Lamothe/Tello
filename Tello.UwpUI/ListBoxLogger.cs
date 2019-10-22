@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Tello;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
-namespace TelloUwpUI
+namespace Tello.UwpUI
 {
-    public class ListBoxLogger : ILogger
+    public class ListBoxLogger : Logger
     {
         private ListBox listBox;
         private ScrollViewer scroller;
@@ -37,22 +33,17 @@ namespace TelloUwpUI
             }
         }
 
-        public async Task WriteDebugLine(string message)
-        {
-            // await WriteLine(message);
-        }
-
-        public async Task WriteErrorLine(string message)
+        public override async void WriteErrorLine(string message)
         {
             await WriteLine(message);
         }
 
-        public async Task WriteInformationLine(string message)
+        public override async void WriteInformationLine(string message)
         {
             await WriteLine(message);
         }
 
-        public async Task WriteWarningLine(string message)
+        public override async void WriteWarningLine(string message)
         {
             await WriteLine(message);
         }

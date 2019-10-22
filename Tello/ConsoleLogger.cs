@@ -3,30 +3,30 @@ using System.Threading.Tasks;
 
 namespace Tello
 {
-    public class ConsoleLogger : ILogger
+    public class ConsoleLogger : Logger
     {
-        public async Task WriteDebugLine(string message)
+        public override void WriteDebugLine(string message)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
-            await Console.Error.WriteLineAsync(message);
+            Console.Error.WriteLineAsync(message);
         }
 
-        public async Task WriteErrorLine(string message)
+        public override void WriteErrorLine(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            await Console.Error.WriteLineAsync(message);
+            Console.Error.WriteLineAsync(message);
         }
 
-        public async Task WriteInformationLine(string message)
+        public override void WriteInformationLine(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            await Console.Error.WriteLineAsync(message);
+            Console.Error.WriteLineAsync(message);
         }
 
-        public async Task WriteWarningLine(string message)
+        public override void WriteWarningLine(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            await Console.Error.WriteLineAsync(message);
+            Console.Error.WriteLineAsync(message);
         }
     }
 }

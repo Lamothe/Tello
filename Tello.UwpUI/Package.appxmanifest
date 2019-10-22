@@ -14,8 +14,8 @@
   <mp:PhoneIdentity PhoneProductId="c72d3ef6-347f-4c85-8368-3e378616a8b3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>TelloUwpUI</DisplayName>
-    <PublisherDisplayName>micha</PublisherDisplayName>
+    <DisplayName>Tello for Windows</DisplayName>
+    <PublisherDisplayName>Michael Lamothe</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="TelloUwpUI.App">
+      EntryPoint="Tello.UwpUI.App">
       <uap:VisualElements
-        DisplayName="TelloUwpUI"
+        DisplayName="Tello UI for Windows"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="UWP application for controlling a Tello drone in Windows 10."
+        Description="Windows (UWP) application for controlling a Tello drone."
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

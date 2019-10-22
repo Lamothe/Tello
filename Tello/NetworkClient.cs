@@ -10,14 +10,14 @@ namespace Tello
     public class NetworkClient : IDisposable
     {
         private UdpClient udpClient = new UdpClient();
-        private ILogger logger;
+        private Logger logger;
         private string address;
         private int port;
         private bool connected = false;
 
         public int TimeoutMilliseconds { get; set; } = 1000;
 
-        public NetworkClient(ILogger logger, string address, int port)
+        public NetworkClient(Logger logger, string address, int port)
         {
             this.logger = logger;
             this.address = address;
@@ -37,23 +37,23 @@ namespace Tello
         {
             try
             {
-                await logger.WriteDebugLine("Waiting for response ...");
+                logger.WriteDebugLine("Waiting for response ...");
                 var asyncResult = udpClient.ReceiveAsync();
                 if (!asyncResult.Wait(TimeoutMilliseconds))
                 {
-                    await logger.WriteDebugLine("Timeout waiting for response");
+                    logger.WriteDebugLine("Timeout waiting for response");
                     return null;
                 }
 
                 var result = await asyncResult;
                 var buffer = result.Buffer;
                 var text = Encoding.UTF8.GetString(buffer);
-                await logger.WriteDebugLine($"Recieved '{text}' ({buffer} bytes) from '{address}:{port}'");
+                logger.WriteDebugLine($"Recieved '{text}' ({buffer} bytes) from '{address}:{port}'");
                 return text;
             }
             catch (Exception ex)
             {
-                await logger.WriteErrorLine($"Read error: {ex.Message}");
+                logger.WriteErrorLine($"Read error: {ex.Message}");
             }
 
             return null;
@@ -84,15 +84,15 @@ namespace Tello
             try
             {
                 var datagram = Encoding.UTF8.GetBytes(message);
-                await logger.WriteDebugLine($"Sending '{message}' to '{address}:{port}' ...");
+                logger.WriteDebugLine($"Sending '{message}' to '{address}:{port}' ...");
                 var bytesSent = connected
                     ? await udpClient.SendAsync(datagram, datagram.Length)
                     : await udpClient.SendAsync(datagram, datagram.Length, EndPoint);
-                await logger.WriteDebugLine($"Sent {bytesSent} bytes.");
+                logger.WriteDebugLine($"Sent {bytesSent} bytes.");
             }
             catch (Exception ex)
             {
-                await logger.WriteErrorLine($"Write error: {ex.Message}");
+                logger.WriteErrorLine($"Write error: {ex.Message}");
             }
         }
     }

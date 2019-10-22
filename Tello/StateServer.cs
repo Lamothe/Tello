@@ -5,14 +5,14 @@ namespace Tello
 {
     public class StateServer : NetworkServer
     {
-        private ILogger logger;
+        private Logger logger;
 
         public delegate void OnStateUpdateHandler();
         public event OnStateUpdateHandler OnStateUpdate;
 
         public ConcurrentDictionary<string, string> State = new ConcurrentDictionary<string, string>();
 
-        public StateServer(ILogger logger) :
+        public StateServer(Logger logger) :
             base(logger, 8890)
         {
             this.logger = logger;

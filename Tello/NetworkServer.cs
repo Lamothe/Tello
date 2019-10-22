@@ -10,7 +10,7 @@ namespace Tello
 {
     public class NetworkServer : IDisposable
     {
-        private ILogger logger;
+        private Logger logger;
         private IPAddress address = IPAddress.Any;
         private int port;
         private Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -21,7 +21,7 @@ namespace Tello
 
         public bool IsListening { get; set; }
 
-        public NetworkServer(ILogger logger, int port)
+        public NetworkServer(Logger logger, int port)
         {
             this.logger = logger;
             this.port = port;
@@ -42,7 +42,7 @@ namespace Tello
         {
             if (task == null)
             {
-                task = Task.Run(async () =>
+                task = Task.Run(() =>
                 {
                     IsListening = true;
                     while (IsListening)
@@ -53,12 +53,12 @@ namespace Tello
                         }
                         catch (SocketException ex)
                         {
-                            await logger.WriteErrorLine($"Server error: {ex.SocketErrorCode}");
+                            logger.WriteErrorLine($"Server error: {ex.SocketErrorCode}");
                             System.Threading.Thread.Sleep(1000);
                         }
                         catch (Exception ex)
                         {
-                            await logger.WriteErrorLine($"Server error: {ex.Message}");
+                            logger.WriteErrorLine($"Server error: {ex.Message}");
                             System.Threading.Thread.Sleep(1000);
                         }
                     }
@@ -66,21 +66,21 @@ namespace Tello
             }
         }
 
-        public async Task StopListening()
+        public void StopListening()
         {
             if (task != null)
             {
-                await logger.WriteInformationLine("Stopping listener");
+                logger.WriteInformationLine("Stopping listener");
                 IsListening = false;
                 task.Wait();
                 task = null;
-                await logger.WriteInformationLine("Listener stopped");
+                logger.WriteInformationLine("Listener stopped");
             }
         }
 
         public void Dispose()
         {
-            StopListening().Wait(2000);
+            StopListening();
         }
     }
 }
