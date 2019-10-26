@@ -7,11 +7,9 @@ using Windows.Devices.WiFi;
 
 namespace Tello.UwpUI
 {
-    internal class WiFi
+    internal class UwpWiFi
     {
-        private Logger logger = null;
-        private bool connected = false;
-        private WiFiAdapter wiFiAdapter = null;
+        protected Logger logger = null;
 
         public delegate void OnConnectedHandler(object sender, string ssid);
         public event OnConnectedHandler OnConnected;
@@ -19,7 +17,11 @@ namespace Tello.UwpUI
         public delegate void OnDisconnectedHandler(object sender);
         public event OnDisconnectedHandler OnDisconnected;
 
-        private async Task<WiFiAdapter> GetWiFiAdapter()
+        public bool IsConnected { get; protected set; } = false;
+
+        private WiFiAdapter wiFiAdapter = null;
+
+        private async Task<WiFiAdapter> GetAdapter()
         {
             if (wiFiAdapter == null)
             {
@@ -29,7 +31,7 @@ namespace Tello.UwpUI
             return wiFiAdapter;
         }
 
-        public WiFi(Logger logger)
+        public UwpWiFi(Logger logger)
         {
             this.logger = logger;
         }
@@ -39,17 +41,19 @@ namespace Tello.UwpUI
             var availableNetwork = availableNetworks.FirstOrDefault(x => x.Ssid.StartsWith(Constants.WiFiSsid));
             if (availableNetwork == null)
             {
-                if (connected)
+                if (IsConnected)
                 {
+                    IsConnected = false;
                     OnDisconnected?.Invoke(this);
                 }
             }
             else
             {
-                if (!connected)
+                if (!IsConnected)
                 {
                     logger.WriteInformationLine($"Connecting to {availableNetwork.Ssid}");
                     await wiFiAdapter.ConnectAsync(availableNetwork, WiFiReconnectionKind.Manual);
+                    IsConnected = true;
                     OnConnected?.Invoke(this, availableNetwork.Ssid);
                 }
             }
@@ -60,7 +64,7 @@ namespace Tello.UwpUI
             WiFiAdapter adapter = null;
             try
             {
-                adapter = await GetWiFiAdapter();
+                adapter = await GetAdapter();
                 await adapter.ScanAsync();
             }
             catch (System.Threading.ThreadAbortException)

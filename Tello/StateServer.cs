@@ -7,10 +7,8 @@ namespace Tello
     {
         private Logger logger;
 
-        public delegate void OnStateUpdateHandler();
+        public delegate void OnStateUpdateHandler(Dictionary<string, string> state);
         public event OnStateUpdateHandler OnStateUpdate;
-
-        public ConcurrentDictionary<string, string> State = new ConcurrentDictionary<string, string>();
 
         public StateServer(Logger logger) :
             base(logger, 8890)
@@ -21,6 +19,7 @@ namespace Tello
 
         private void StateServer_OnServerData(byte[] data)
         {
+            var state = new Dictionary<string, string>();
             var stateString = System.Text.Encoding.ASCII.GetString(data);
             if (stateString != null)
             {
@@ -29,11 +28,11 @@ namespace Tello
                     var parts = entry.Split(':');
                     if (parts.Length == 2)
                     {
-                        State[parts[0]] = parts[1];
+                        state[parts[0]] = parts[1];
                     }
                 }
                 logger.WriteDebugLine($"Got State: '{stateString}'");
-                OnStateUpdate?.Invoke();
+                OnStateUpdate?.Invoke(state);
             }
         }
     }

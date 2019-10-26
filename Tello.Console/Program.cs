@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 using System.Threading.Tasks;
 using Tello;
 
@@ -10,9 +10,8 @@ namespace TelloClient
         {
             var logger = new ConsoleLogger();
 
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<Logger>(logger)
-                .BuildServiceProvider();
+            logger.WriteInformationLine("Connect to the Tello drone manually and press enter");
+            Console.ReadKey();
 
             var commandClient = new CommandClient(logger);
 

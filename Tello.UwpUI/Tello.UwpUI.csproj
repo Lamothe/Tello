@@ -124,7 +124,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ListBoxLogger.cs" />
-    <Compile Include="WiFi.cs" />
+    <Compile Include="TelloService.cs" />
+    <Compile Include="UwpWiFi.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
