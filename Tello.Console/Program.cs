@@ -15,14 +15,16 @@ namespace TelloClient
 
             var commandClient = new CommandClient(logger);
 
-            Task.Run(async () =>
-            {
-                await commandClient.Initialise();
-                await commandClient.TakeOff();
-                await commandClient.Left(20);
-                await commandClient.Right(20);
-                await commandClient.Land();
-            });
+            RunAsync(commandClient);
+        }
+
+        static async void RunAsync(CommandClient commandClient)
+        {
+            await commandClient.Initialise();
+            await commandClient.TakeOff();
+            await commandClient.Left(20);
+            await commandClient.Right(20);
+            await commandClient.Land();
         }
     }
 }

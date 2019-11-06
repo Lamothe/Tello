@@ -77,7 +77,7 @@ namespace Tello.UwpUI
         private void UpdateState()
         {
             var fields = telloService.State;
-            var status = $"{DateTime.Now.ToString()} - {(telloService.IsConnected ? "Connected" : "Not connected")}\r\n";
+            var status = $"{DateTime.Now.ToString()} - {(telloService.IsDroneConnected ? "Connected" : "Not connected")}\r\n";
             foreach (var key in fields.Keys)
             {
                 status += $"{key}: {fields[key]}\r\n";
@@ -85,7 +85,7 @@ namespace Tello.UwpUI
 
             Task.Run(async () =>
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Status.Text = status);
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Status.Text = status);
             });
         }
 
@@ -98,7 +98,7 @@ namespace Tello.UwpUI
         {
             logger.WriteDebugLine($"Key pressed {args.VirtualKey}");
 
-            if (!telloService.IsConnected)
+            if (!telloService.IsDroneConnected)
             {
                 logger.WriteInformationLine("Not connected");
             }
@@ -125,6 +125,9 @@ namespace Tello.UwpUI
                     case Windows.System.VirtualKey.Down: await telloService.FlipBackward(); break;
 
                     case Windows.System.VirtualKey.Enter: await telloService.Emergency(); break;
+
+                    case Windows.System.VirtualKey.A: await telloService.GetSerialNumber(); break;
+                    case Windows.System.VirtualKey.S: await telloService.GetSpeed(); break;
                 }
             }
         }

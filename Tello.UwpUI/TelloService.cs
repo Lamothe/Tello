@@ -15,12 +15,12 @@ namespace Tello.UwpUI
     {
         private Logger logger;
         private bool running { get; set; } = false;
-        private CommandClient commandClient { get; set; } = null;
         private StateServer stateClient { get; set; } = null;
         private VideoServer videoServer { get; set; } = null;
         private UwpWiFi wiFi { get; set; } = null;
         private ConcurrentDictionary<string, string> state { get; } = new ConcurrentDictionary<string, string>();
-        public bool IsConnected { get; private set; } = false;
+        public bool IsDroneConnected { get; private set; } = false;
+        public bool IsWiFiConnected { get; private set; } = false;
 
         public Dictionary<string, string> State => state.ToDictionary(x => x.Key, x => x.Value);
 
@@ -50,7 +50,6 @@ namespace Tello.UwpUI
             }
             else
             {
-                commandClient = new CommandClient(logger);
                 stateClient = new StateServer(logger);
                 videoServer = new VideoServer(logger);
                 wiFi = new UwpWiFi(logger);
@@ -104,18 +103,22 @@ namespace Tello.UwpUI
 
         private async void WiFi_OnConnected(object sender, string ssid)
         {
-            IsConnected = true;
-            await Initialise();
-            logger.WriteInformationLine($"Serial Number: {await GetSerialNumber()}");
-            await EnableVideo();
-            stateClient.Listen();
-            videoServer.Listen();
-            logger.WriteInformationLine($"Connected to {ssid}");
+            IsWiFiConnected = true;
+            if (Initialise().Result)
+            {
+                IsDroneConnected = true;
+                logger.WriteInformationLine($"Serial Number: {await GetSerialNumber()}");
+                await EnableVideo();
+                stateClient.Listen();
+                videoServer.Listen();
+                logger.WriteInformationLine($"Connected to {ssid}");
+            }
         }
 
         private async void WiFi_OnDisconnected(object sender)
         {
-            IsConnected = false;
+            IsDroneConnected = false;
+            IsWiFiConnected = false;
             logger.WriteErrorLine($"Disconnected from Tello");
             await DisableVideo();
             videoServer.StopListening();

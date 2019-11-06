@@ -46,10 +46,7 @@ namespace Tello
             return int.TryParse(await Send(command), out int value) ? value : (int?)null;
         }
 
-        public async Task<bool> Initialise()
-        {
-            return await SendSet("command");
-        }
+        public async Task<bool> Initialise() => await SendSet("command");
 
         public async Task<bool> Emergency() => await SendSet("emergency");
 
