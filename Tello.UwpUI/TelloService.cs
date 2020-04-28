@@ -70,35 +70,32 @@ namespace Tello.UwpUI
                 MediaStreamSource.BufferTime = TimeSpan.FromSeconds(0);
                 MediaStreamSource.SampleRequested += MediaStreamSource_SampleRequested;
 
-                Loop();
+                await Loop();
 
                 OnInitialised?.Invoke(this);
             }
         }
 
-        private void Loop()
+        private async Task Loop()
         {
             logger.WriteInformationLine($"Waiting for WiFi connection");
 
-            Task.Run(async () =>
+            running = true;
+            while (running)
             {
-                running = true;
-                while (running)
+                try
                 {
-                    try
-                    {
-                        var availableNetworks = await wiFi.Scan();
-                        OnAvailableNetworksUpdated?.Invoke(this, availableNetworks);
-                        await wiFi.RefreshNetworkConnection(availableNetworks);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.WriteErrorLine($"Loop Exception: {ex.Message}");
-                    }
-
-                    await Task.Delay(1000);
+                    var availableNetworks = await wiFi.Scan();
+                    OnAvailableNetworksUpdated?.Invoke(this, availableNetworks);
+                    await wiFi.RefreshNetworkConnection(availableNetworks);
                 }
-            });
+                catch (Exception ex)
+                {
+                    logger.WriteErrorLine($"Loop Exception: {ex.Message}");
+                }
+
+                await Task.Delay(1000);
+            }
         }
 
         private async void WiFi_OnConnected(object sender, string ssid)
@@ -107,7 +104,7 @@ namespace Tello.UwpUI
             if (Initialise().Result)
             {
                 IsDroneConnected = true;
-                logger.WriteInformationLine($"Serial Number: {await GetSerialNumber()}");
+                //                logger.WriteInformationLine($"Serial Number: {await GetSerialNumber()}");
                 await EnableVideo();
                 stateClient.Listen();
                 videoServer.Listen();

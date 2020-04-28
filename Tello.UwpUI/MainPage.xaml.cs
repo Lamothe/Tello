@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.WiFi;
-using Windows.Media.Core;
-using Windows.Media.MediaProperties;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -106,14 +101,14 @@ namespace Tello.UwpUI
             {
                 switch (args.VirtualKey)
                 {
-                    case Windows.System.VirtualKey.Subtract: await telloService.TakeOff(); break;
-                    case Windows.System.VirtualKey.Add: await telloService.Land(); break;
+                    case Windows.System.VirtualKey.Space: await telloService.TakeOff(); break;
+                    case Windows.System.VirtualKey.Delete: await telloService.Land(); break;
 
                     case Windows.System.VirtualKey.Left: await telloService.RotateLeft(45); break;
                     case Windows.System.VirtualKey.Right: await telloService.RotateRight(45); break;
 
-                    case Windows.System.VirtualKey.Home: await telloService.Forward(50); break;
-                    case Windows.System.VirtualKey.Up: await telloService.SetSpeed(20); break;
+                    case Windows.System.VirtualKey.Up: await telloService.Forward(50); break;
+//                    case Windows.System.VirtualKey.Up: await telloService.SetSpeed(20); break;
                     case Windows.System.VirtualKey.Clear: await telloService.Stop(); break;
 
                     case Windows.System.VirtualKey.Divide: await telloService.RotateLeft(180); break;
